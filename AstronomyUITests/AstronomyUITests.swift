@@ -23,6 +23,8 @@ class AstronomyUITests: XCTestCase {
         app.launchArguments = ["UITesting"]
         
         app.launch()
+        
+       // app.navigationBars["Sol 2"]
 
     }
     
@@ -35,7 +37,7 @@ class AstronomyUITests: XCTestCase {
        
         XCTAssertTrue(collectionView.exists)
         tapCell(0)
-        testDetailViewPageExists()
+        detailViewPageExists()
         saveButton.tap()
         savePhotoAlertAppears()
         
@@ -43,37 +45,50 @@ class AstronomyUITests: XCTestCase {
     
     func testNextButtonTapped() {
         
-       
-        
+        let title = "Sol 15"
+        titleIs(title)
+        app.navigationBars[title]/*@START_MENU_TOKEN@*/.buttons["PhotosCollectionViewController.NextSolButton"]/*[[".buttons[\">\"]",".buttons[\"PhotosCollectionViewController.NextSolButton\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        titleIs("Sol 16")
+
     }
     
     func testPreviousButtonTapped() {
         
+        let title = "Sol 15"
+        titleIs(title)
+        app.navigationBars[title]/*@START_MENU_TOKEN@*/.buttons["PhotosCollectionViewController.PreviousSolButton"]/*[[".buttons[\"<\"]",".buttons[\"PhotosCollectionViewController.PreviousSolButton\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        titleIs("Sol 14")
         
+       // XCUIApplication().navigationBars["Sol 1"].otherElements["Sol 1"].tap()
+   
     }
     
     func testDetailViewBackToCollection() {
-        
-        let app = XCUIApplication()
-        app.collectionViews.children(matching: .cell).element(boundBy: 2).children(matching: .other).element.tap()
-        app.navigationBars["Title"].buttons["Sol 1"].tap()
-        
+       
+        XCTAssertTrue(collectionView.exists)
+        tapCell(2)
+        detailViewPageExists()
+        app.navigationBars["Title"].buttons["Sol 15"].tap()
+        XCTAssertTrue(collectionView.exists)
+      
     }
     
-    func testViewingDetailView() {
-        
-        
-        
-     
-    }
     
-    func testDetailViewPageExists() {
+    func detailViewPageExists() {
         
         XCTAssertTrue(detailImage.exists)
         let statusLabel = app.staticTexts["Camera:"]
+        XCTAssertTrue(cameraLabel.exists)
+        XCTAssertTrue(roverLabel.exists)
         XCTAssertTrue(statusLabel.exists)
         XCTAssertTrue(saveButton.exists)
         
+    }
+    
+    func titleIs(_ title: String) {
+        
+        XCTAssert(app.navigationBars[title].exists)
+
     }
     
     func savePhotoAlertAppears() {
@@ -103,5 +118,14 @@ class AstronomyUITests: XCTestCase {
     var detailImage: XCUIElement {
        return app.images["PhotoDetailViewController.ImageView"]
     }
+    
+    var roverLabel: XCUIElement {
+        return app.staticTexts["PhotoDetailViewController.rover"]
+    }
+    
+    var cameraLabel: XCUIElement {
+        return app.staticTexts["PhotoDetailViewController.camera"]
+    }
+    
     
 }
